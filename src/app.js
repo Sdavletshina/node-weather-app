@@ -1,9 +1,11 @@
 const express = require('express');
 const path = require('path');
-const app = express();
 const hbs = require('hbs');
 const geocode = require('./utils/geocode');
 const getWeather = require('./utils/getWeather');
+
+const app = express();
+const port = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, '../public')));
 
@@ -33,7 +35,6 @@ app.get('/help', (req, res) => {
   });
 });
 app.get('/weather', (req, res) => {
-  console.log(req.query)
   if(req.query.address){
     geocode(req.query.address, (error, { latitude, longitude, location }={} )=>{
       if(error) res.send({error});
@@ -47,11 +48,6 @@ app.get('/weather', (req, res) => {
         }
         )}
     });
-      // res.send({
-      //   title: 'Weather',
-      //   name: 'Sabira',
-      //   address: req.query.address,
-      // });
   } else {
     res.send({
       error: 'You must provide a search term'
@@ -76,6 +72,6 @@ app.get('*', (req, res)=>{
   })
 })
 
-app.listen(3000, ()=>{
-  console.log('App is listening on port 3000')
+app.listen(port, () => {
+  console.log(`App is listening on port ${port}`)
 })
